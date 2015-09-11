@@ -103,5 +103,4 @@ function EmailController($scope) {
 	  ////// sent mail data
 
 	  vm.sentEmails = [];
-
 }
