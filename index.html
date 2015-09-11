@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" />
+    <style type="text/css">
+    .container {
+        margin-top: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container" ng-app="myMail" ng-controller="EmailController as vm">
+        <ul class="nav nav-tabs">
+            <li ng-class="{active: vm.activeTab == 'inbox'}"><a ng-click="vm.activeTab='inbox'">Inbox</a></li>
+            <li ng-class="{active: vm.activeTab == 'sent'}"><a ng-click="vm.activeTab='sent'">Sent</a></li>
+        </ul>
+        <table class="table table-bordered table-condensed" ng-show="vm.activeTab=='inbox'">
+            <tbody>
+                <tr ng-repeat="email in vm.emails" ng-click="vm.showPopup(email)">
+                    <td>{{email.from}}</td>
+                    <td>{{email.subject}}</td>
+                    <td>{{email.date}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered table-condensed" ng-show="vm.activeTab=='sent'">
+            <tbody>
+                <tr ng-repeat="sent in vm.sentEmails" ng-click="vm.showPopup(sent)">
+                    <td>{{sent.from}}</td>
+                    <td>{{sent.to}}</td>
+                    <td>{{sent.subject}}</td>
+                    <td>{{sent.date | date:'MMM d'}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary" ng-click="vm.showComposePopup()">Compose</button>
+        <div class="modal" ng-show="vm.isPopupVisible">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="vm.closePopup()">x</button>
+                <h3>{{vm.selectedEmail.subject}}</h3>
+            </div>
+            <div class="modal-body">
+                <strong>From:</strong> {{vm.selectedEmail.from}}
+                <br />
+                <strong>To:</strong> {{vm.selectedEmail.to}}
+                <br />
+                <strong>Date:</strong> {{vm.selectedEmail.date}}
+                <br />
+                <br />
+                <p>
+                    Hey You,
+                    <br />
+                    <br /> <span style="white-space:pre">{{vm.selectedEmail.body}}</span>
+                    <br />
+                    <br /> Sincerely
+                    <br /> Your Bro
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" ng-click="vm.forward()">Forward</a>
+                <a href="#" class="btn" ng-click="vm.reply()">Reply</a>
+                <a href="#" class="btn btn-primary" ng-click="vm.closePopup()">Close</a>
+            </div>
+        </div>
+        <!-- compose emails -->
+        <div class="modal" ng-show="vm.isComposePopupVisible">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="vm.closeComposePopup()">x</button>
+                <h3>Compose Email</h3>
+            </div>
+            <div class="modal-body ">
+                <form>
+                    <input type="text" placeholder="From" style="width:95%;" ng-model="vm.composeEmail.from">
+                    <br />
+                    <input type="text" placeholder="To" style="width:95%;" ng-model="vm.composeEmail.to">
+                    <br />
+                    <input type="text" placeholder="Subject" style="width:95%;" ng-model="vm.composeEmail.subject">
+                    <br />
+                    <textarea style="width:95%;" rows="10" ng-model="vm.composeEmail.body"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <a href="# " class="btn" ng-click="vm.closeComposePopup()">Close</a>
+                <a href="# " class="btn btn-primary" ng-click="vm.sendEmail()">Send</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="EmailController.js"></script>
+</body>
+
+</html>
